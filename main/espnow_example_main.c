@@ -146,12 +146,14 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     buf->magic = send_param->magic;
     /* Fill all remaining bytes after the data with random values */
     // esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
+    /*----------------------------------------------------------------------------------------------------------*/
     char str[] = my_chat;
     for(int i=0;i<strlen(str);i++)
     {
         buf->payload[i] = (uint8_t)str[i];
     }
     ESP_LOGI(TAG, "data recived from console : %s",buf->payload);
+    /*----------------------------------------------------------------------------------------------------------*/
     buf->crc = esp_crc16_le(UINT16_MAX, (uint8_t const *)buf, send_param->len);
 }
 
@@ -379,8 +381,9 @@ void app_main(void)
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
-
     example_wifi_init();
     example_espnow_init();
+    /*----------------------------------------------------------------------------------------------------------*/
     start_console_self_defined();
+    /*----------------------------------------------------------------------------------------------------------*/
 }

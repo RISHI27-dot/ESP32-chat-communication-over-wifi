@@ -190,9 +190,11 @@ void start_console_self_defined(void)
             /* Save command history to filesystem */
             linenoiseHistorySave(HISTORY_PATH);
 #endif
-        }
+        /*-----------------------------------------------------------------------------------------------------------------------------*/
         my_chat.len = l;
         strcpy(my_chat.my_data , line);
+        /*-----------------------------------------------------------------------------------------------------------------------------*/
+        }
 
         /**pass the string to esp now */
         
