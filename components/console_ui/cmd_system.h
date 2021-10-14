@@ -1,4 +1,4 @@
-/* Console example — declarations of command registration functions.
+/* Console example — various system commands
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -12,11 +12,9 @@
 extern "C" {
 #endif
 
-#include "cmd_system.h"
-#include "cmd_wifi.h"
-//#include "cmd_nvs.h"
+// Register system functions
+void register_system(void);
 
 #ifdef __cplusplus
 }
 #endif
-

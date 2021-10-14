@@ -29,25 +29,25 @@ static const char* TAG = "example";
  * The easiest way to do this is to use FATFS filesystem on top of
  * wear_levelling library.
  */
-#if CONFIG_STORE_HISTORY
+// #if CONFIG_STORE_HISTORY
 
-#define MOUNT_PATH "/data"
-#define HISTORY_PATH MOUNT_PATH "/history.txt"
+// #define MOUNT_PATH "/data"
+// #define HISTORY_PATH MOUNT_PATH "/history.txt"
 
-static void initialize_filesystem(void)
-{
-    static wl_handle_t wl_handle;
-    const esp_vfs_fat_mount_config_t mount_config = {
-            .max_files = 4,
-            .format_if_mount_failed = true
-    };
-    esp_err_t err = esp_vfs_fat_spiflash_mount(MOUNT_PATH, "storage", &mount_config, &wl_handle);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
-        return;
-    }
-}
-#endif // CONFIG_STORE_HISTORY
+// static void initialize_filesystem(void)
+// {
+//     static wl_handle_t wl_handle;
+//     const esp_vfs_fat_mount_config_t mount_config = {
+//             .max_files = 4,
+//             .format_if_mount_failed = true
+//     };
+//     esp_err_t err = esp_vfs_fat_spiflash_mount(MOUNT_PATH, "storage", &mount_config, &wl_handle);
+//     if (err != ESP_OK) {
+//         ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
+//         return;
+//     }
+// }
+// #endif 
 
 data_form_console_to_espnow my_chat;
 
@@ -119,22 +119,22 @@ static void initialize_console(void)
     /* Don't return empty lines */
     linenoiseAllowEmpty(false);
 
-#if CONFIG_STORE_HISTORY
-    /* Load command history from filesystem */
-    linenoiseHistoryLoad(HISTORY_PATH);
-#endif
+// #if CONFIG_STORE_HISTORY
+//     /* Load command history from filesystem */
+//     linenoiseHistoryLoad(HISTORY_PATH);
+// #endif
 }
 
 void start_console_self_defined(void)
 {
     initialize_nvs();
 
-#if CONFIG_STORE_HISTORY
-    initialize_filesystem();
-    ESP_LOGI(TAG, "Command history enabled");
-#else
-    ESP_LOGI(TAG, "Command history disabled");
-#endif
+// #if CONFIG_STORE_HISTORY
+//     initialize_filesystem();
+//     ESP_LOGI(TAG, "Command history enabled");
+// #else
+//     ESP_LOGI(TAG, "Command history disabled");
+// #endif
 
     initialize_console();
 
@@ -142,7 +142,7 @@ void start_console_self_defined(void)
     esp_console_register_help_command();
     register_system();
     register_wifi();
-    register_nvs();
+    //register_nvs();
 
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
@@ -186,14 +186,14 @@ void start_console_self_defined(void)
         int l = strlen(line);
         if (l > 0) {
             linenoiseHistoryAdd(line);
-#if CONFIG_STORE_HISTORY
-            /* Save command history to filesystem */
-            linenoiseHistorySave(HISTORY_PATH);
-#endif
-        /*-----------------------------------------------------------------------------------------------------------------------------*/
-        my_chat.len = l;
-        strcpy(my_chat.my_data , line);
-        /*-----------------------------------------------------------------------------------------------------------------------------*/
+            // #if CONFIG_STORE_HISTORY
+            //             /* Save command history to filesystem */
+            //             linenoiseHistorySave(HISTORY_PATH);
+            // #endif
+            /*-----------------------------------------------------------------------------------------------------------------------------*/
+            my_chat.len = l;
+            strcpy(my_chat.my_data, line);
+            /*-----------------------------------------------------------------------------------------------------------------------------*/
         }
 
         /**pass the string to esp now */

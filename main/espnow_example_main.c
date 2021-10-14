@@ -370,8 +370,6 @@ static void example_espnow_deinit(example_espnow_send_param_t *send_param)
     esp_now_deinit();
 }
 
-char* get_data_from_console()
-
 void app_main(void)
 {
     // Initialize NVS
