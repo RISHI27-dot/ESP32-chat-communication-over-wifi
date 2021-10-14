@@ -2,6 +2,7 @@
     "files.associations": {
         "esp_log.h": "c",
         "data_pass.h": "c",
-        "esp_console.h": "c"
+        "esp_console.h": "c",
+        "nvs_flash.h": "c"
     }
 }
