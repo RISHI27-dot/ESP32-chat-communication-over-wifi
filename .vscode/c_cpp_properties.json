@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "~/esp/esp-idf/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

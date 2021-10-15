@@ -135,6 +135,7 @@ int example_espnow_data_parse(uint8_t *data, uint16_t data_len, uint8_t *state, 
 /* Prepare ESPNOW data to be sent. */
 void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
 {
+    ESP_LOGI(TAG, "entering example_espnow_data_prepare");
     example_espnow_data_t *buf = (example_espnow_data_t *)send_param->buffer;
 
     assert(send_param->len >= sizeof(example_espnow_data_t));
@@ -144,21 +145,25 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     buf->seq_num = s_example_espnow_seq[buf->type]++;
     buf->crc = 0;
     buf->magic = send_param->magic;
+    
     /* Fill all remaining bytes after the data with random values */
-    // esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
+    //  esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
     /*----------------------------------------------------------------------------------------------------------*/
-    char *str = my_chat.my_data;
-    for(int i=0;i<strlen(str);i++)
+    char *str = "apna time ayenga";
+    for(int i=0;i < strlen(str);i++)
     {
-        buf->payload[i] = (uint8_t)str[i];
+        buf->payload[i] = str[i];
     }
-    ESP_LOGI(TAG, "data recived from console : %s",buf->payload);
+    ESP_LOGI(TAG, "hello the payload is : %s",buf->payload);
     /*----------------------------------------------------------------------------------------------------------*/
     buf->crc = esp_crc16_le(UINT16_MAX, (uint8_t const *)buf, send_param->len);
+    ESP_LOGI(TAG, "exiting example_espnow_data_prepare");
+    
 }
 
 static void example_espnow_task(void *pvParameter)
 {
+    ESP_LOGI(TAG, "entering example_espnow_task");
     example_espnow_event_t evt;
     uint8_t recv_state = 0;// if the recived data is broadcast or not
     uint16_t recv_seq = 0;//sequence number of esp data 
@@ -167,7 +172,7 @@ static void example_espnow_task(void *pvParameter)
     int ret;
 
     vTaskDelay(5000 / portTICK_RATE_MS);
-    ESP_LOGI(TAG, "Start sending broadcast data");
+
 
     /* Start sending broadcast ESPNOW data. */
     /* next line is setting the send_parm pointer to the address location recived in the arg of this function */
@@ -294,10 +299,12 @@ static void example_espnow_task(void *pvParameter)
                 break;
         }
     }
+    ESP_LOGI(TAG, "exiting example_espnow_task");
 }
 
 static esp_err_t example_espnow_init(void)
 {
+    ESP_LOGI(TAG, "entering example_espnow_init");
     example_espnow_send_param_t *send_param;
 
     s_example_espnow_queue = xQueueCreate(ESPNOW_QUEUE_SIZE, sizeof(example_espnow_event_t));
@@ -310,7 +317,6 @@ static esp_err_t example_espnow_init(void)
     ESP_ERROR_CHECK( esp_now_init() );
     ESP_ERROR_CHECK( esp_now_register_send_cb(example_espnow_send_cb) );//register callback
     ESP_ERROR_CHECK( esp_now_register_recv_cb(example_espnow_recv_cb) );//register callback
-
     /* Set primary master key. */
     ESP_ERROR_CHECK( esp_now_set_pmk((uint8_t *)CONFIG_ESPNOW_PMK) );
 
@@ -356,10 +362,10 @@ static esp_err_t example_espnow_init(void)
     }
     memcpy(send_param->dest_mac, s_example_broadcast_mac, ESP_NOW_ETH_ALEN);
     example_espnow_data_prepare(send_param);
-
+    
     xTaskCreate(example_espnow_task, "example_espnow_task", 2048, send_param, 4, NULL);
-
     return ESP_OK;
+    ESP_LOGI(TAG, "exiting example_espnow_init");
 }
 
 static void example_espnow_deinit(example_espnow_send_param_t *send_param)
@@ -379,9 +385,10 @@ void app_main(void)
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
-    example_wifi_init();
-    example_espnow_init();
     /*----------------------------------------------------------------------------------------------------------*/
     start_console_self_defined();
     /*----------------------------------------------------------------------------------------------------------*/
+    example_wifi_init();
+    example_espnow_init();
+    // ESP_LOGI(TAG, "hmmmm______________________________MMMMM________________________________________________________");
 }

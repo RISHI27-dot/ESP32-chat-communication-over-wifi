@@ -70,12 +70,6 @@ CONFIG_BOOTLOADER_RESERVE_RTC_SIZE=0
 # end of Security features
 
 #
-# Example Configuration
-#
-CONFIG_STORE_HISTORY=y
-# end of Example Configuration
-
-#
 # Serial flasher config
 #
 CONFIG_ESPTOOLPY_BAUD_OTHER_VAL=115200
@@ -136,8 +130,14 @@ CONFIG_ESPNOW_LMK="lmk1234567890123"
 CONFIG_ESPNOW_CHANNEL=1
 CONFIG_ESPNOW_SEND_COUNT=100
 CONFIG_ESPNOW_SEND_DELAY=1000
-CONFIG_ESPNOW_SEND_LEN=10
+CONFIG_ESPNOW_SEND_LEN=50
 # CONFIG_ESPNOW_ENABLE_LONG_RANGE is not set
+# end of Example Configuration
+
+#
+# Example Configuration
+#
+CONFIG_STORE_HISTORY=y
 # end of Example Configuration
 
 #
@@ -1034,5 +1034,5 @@ CONFIG_WPA_MBEDTLS_CRYPTO=y
 #
 # Compatibility options
 #
-# CONFIG_LEGACY_INCLUDE_COMMON_HEADERS is not set
+CONFIG_LEGACY_INCLUDE_COMMON_HEADERS=y
 # end of Compatibility options

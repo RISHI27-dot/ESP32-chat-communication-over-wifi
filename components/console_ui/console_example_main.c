@@ -99,14 +99,19 @@ static void initialize_console(void)
 // #endif
 }
 
+void send_to_esp_now(char * chat)
+{
+    
+}
+
 void start_console_self_defined(void)
 {
     initialize_nvs();
     initialize_console();
     /* Register commands */
-    esp_console_register_help_command();
+    // esp_console_register_help_command();
     register_system();
-    register_wifi();
+    //register_wifi();
 
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
@@ -146,34 +151,29 @@ void start_console_self_defined(void)
         if (line == NULL) { /* Break on EOF or error */
             break;
         }
+        printf("the commadn you entered is %s\n",line);
         /* Add the command to the history if not empty*/
         int l = strlen(line);
-        if (l > 0) {
-            linenoiseHistoryAdd(line);
-            // #if CONFIG_STORE_HISTORY
-            //             /* Save command history to filesystem */
-            //             linenoiseHistorySave(HISTORY_PATH);
-            // #endif
-            /*-----------------------------------------------------------------------------------------------------------------------------*/
-            my_chat.len = l;
-            strcpy(my_chat.my_data, line);
-            /*-----------------------------------------------------------------------------------------------------------------------------*/
-        }
-
-        /**pass the string to esp now */
+        // if (l > 0) {
+        //     // linenoiseHistoryAdd(line);
+        //     // #if CONFIG_STORE_HISTORY
+        //     //             /* Save command history to filesystem */
+        //     //             linenoiseHistorySave(HISTORY_PATH);
+        //     // #endif
+        // }
         
         /* Try to run the command */
-        // int ret;
-        // esp_err_t err = esp_console_run(line, &ret);
-        // if (err == ESP_ERR_NOT_FOUND) {
-        //     printf("Unrecognized command\n");
-        // } else if (err == ESP_ERR_INVALID_ARG) {
-        //     // command was empty
-        // } else if (err == ESP_OK && ret != ESP_OK) {
-        //     printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
-        // } else if (err != ESP_OK) {
-        //     printf("Internal error: %s\n", esp_err_to_name(err));
-        // }
+         int ret;
+         esp_err_t err = esp_console_run(line, &ret);
+         if (err == ESP_ERR_NOT_FOUND) {
+             printf("Unrecognized command\n");
+         } else if (err == ESP_ERR_INVALID_ARG) {
+             // command was empty
+         } else if (err == ESP_OK && ret != ESP_OK) {
+             printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
+         } else if (err != ESP_OK) {
+             printf("Internal error: %s\n", esp_err_to_name(err));
+         }
         /* linenoise allocates line buffer on the heap, so need to free it */
         linenoiseFree(line);
     }
