@@ -4,6 +4,7 @@
         "data_pass.h": "c",
         "esp_console.h": "c",
         "nvs_flash.h": "c",
-        "esp_vfs_fat.h": "c"
+        "esp_vfs_fat.h": "c",
+        "cmd_decl.h": "c"
     }
 }

@@ -147,7 +147,7 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     /* Fill all remaining bytes after the data with random values */
     // esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
     /*----------------------------------------------------------------------------------------------------------*/
-    char str[] = my_chat;
+    char *str = my_chat.my_data;
     for(int i=0;i<strlen(str);i++)
     {
         buf->payload[i] = (uint8_t)str[i];
