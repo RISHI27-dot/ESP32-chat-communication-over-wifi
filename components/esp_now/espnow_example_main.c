@@ -28,11 +28,8 @@
 #include "esp_now.h"
 #include "esp_crc.h"
 #include "espnow_example.h"
-#include "data_pass.h"
 
 static const char *TAG = "espnow_example";
-
-data_form_console_to_espnow chat;
 
 static xQueueHandle s_example_espnow_queue;
 
@@ -386,7 +383,7 @@ void app_main(void)
     }
     ESP_ERROR_CHECK( ret );
     /*----------------------------------------------------------------------------------------------------------*/
-    start_console_self_defined();
+    // start_console_self_defined();
     /*----------------------------------------------------------------------------------------------------------*/
     example_wifi_init();
     example_espnow_init();

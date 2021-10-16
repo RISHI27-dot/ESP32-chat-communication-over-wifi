@@ -13,18 +13,41 @@
 #include "esp_log.h"
 #include "esp_console.h"
 #include "esp_vfs_dev.h"
-#include "data_pass.h"
-#include "cmd_system.h"
 #include "driver/uart.h"
 #include "linenoise/linenoise.h"
 #include "argtable3/argtable3.h"
 #include "cmd_decl.h"
+#include "esp_vfs_fat.h"
+#include "nvs.h"
 #include "nvs_flash.h"
 
 static const char* TAG = "example";
 #define PROMPT_STR CONFIG_IDF_TARGET
 
-data_form_console_to_espnow my_chat;
+/* Console command history can be stored to and loaded from a file.
+ * The easiest way to do this is to use FATFS filesystem on top of
+ * wear_levelling library.
+ */
+#if CONFIG_STORE_HISTORY
+
+#define MOUNT_PATH "/data"
+#define HISTORY_PATH MOUNT_PATH "/history.txt"
+
+static void initialize_filesystem(void)
+{
+    static wl_handle_t wl_handle;
+    const esp_vfs_fat_mount_config_t mount_config = {
+            .max_files = 4,
+            .format_if_mount_failed = true
+    };
+    esp_err_t err = esp_vfs_fat_spiflash_mount(MOUNT_PATH, "storage", &mount_config, &wl_handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
+        return;
+    }
+}
+#endif // CONFIG_STORE_HISTORY
+
 static void initialize_nvs(void)
 {
     esp_err_t err = nvs_flash_init();
@@ -93,25 +116,30 @@ static void initialize_console(void)
     /* Don't return empty lines */
     linenoiseAllowEmpty(false);
 
-// #if CONFIG_STORE_HISTORY
-//     /* Load command history from filesystem */
-//     linenoiseHistoryLoad(HISTORY_PATH);
-// #endif
+#if CONFIG_STORE_HISTORY
+    /* Load command history from filesystem */
+    linenoiseHistoryLoad(HISTORY_PATH);
+#endif
 }
 
-void send_to_esp_now(char * chat)
-{
-    
-}
-
-void start_console_self_defined(void)
+void app_main(void)
 {
     initialize_nvs();
+
+#if CONFIG_STORE_HISTORY
+    initialize_filesystem();
+    ESP_LOGI(TAG, "Command history enabled");
+#else
+    ESP_LOGI(TAG, "Command history disabled");
+#endif
+
     initialize_console();
+
     /* Register commands */
-    // esp_console_register_help_command();
+    esp_console_register_help_command();
     register_system();
-    //register_wifi();
+    register_wifi();
+    register_nvs();
 
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
@@ -147,33 +175,30 @@ void start_console_self_defined(void)
          * The line is returned when ENTER is pressed.
          */
         char* line = linenoise(prompt);
-        
         if (line == NULL) { /* Break on EOF or error */
             break;
         }
-        printf("the commadn you entered is %s\n",line);
         /* Add the command to the history if not empty*/
-        int l = strlen(line);
-        // if (l > 0) {
-        //     // linenoiseHistoryAdd(line);
-        //     // #if CONFIG_STORE_HISTORY
-        //     //             /* Save command history to filesystem */
-        //     //             linenoiseHistorySave(HISTORY_PATH);
-        //     // #endif
-        // }
-        
+        if (strlen(line) > 0) {
+            linenoiseHistoryAdd(line);
+#if CONFIG_STORE_HISTORY
+            /* Save command history to filesystem */
+            linenoiseHistorySave(HISTORY_PATH);
+#endif
+        }
+
         /* Try to run the command */
-         int ret;
-         esp_err_t err = esp_console_run(line, &ret);
-         if (err == ESP_ERR_NOT_FOUND) {
-             printf("Unrecognized command\n");
-         } else if (err == ESP_ERR_INVALID_ARG) {
-             // command was empty
-         } else if (err == ESP_OK && ret != ESP_OK) {
-             printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
-         } else if (err != ESP_OK) {
-             printf("Internal error: %s\n", esp_err_to_name(err));
-         }
+        int ret;
+        esp_err_t err = esp_console_run(line, &ret);
+        if (err == ESP_ERR_NOT_FOUND) {
+            printf("Unrecognized command\n");
+        } else if (err == ESP_ERR_INVALID_ARG) {
+            // command was empty
+        } else if (err == ESP_OK && ret != ESP_OK) {
+            printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
+        } else if (err != ESP_OK) {
+            printf("Internal error: %s\n", esp_err_to_name(err));
+        }
         /* linenoise allocates line buffer on the heap, so need to free it */
         linenoiseFree(line);
     }
