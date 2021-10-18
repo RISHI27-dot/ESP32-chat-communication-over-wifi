@@ -28,8 +28,9 @@
 #include "esp_now.h"
 #include "esp_crc.h"
 #include "chat_espnow.h"
+#include "data_transfer.h"
 
-static const char *TAG = "espnow_example";
+static const char *TAG = "espnow_main";
 
 static xQueueHandle s_example_espnow_queue;
 
@@ -146,12 +147,21 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     /* Fill all remaining bytes after the data with random values */
     //  esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
     /*----------------------------------------------------------------------------------------------------------*/
-    char *str = "apna time ayenga";
-    for(int i=0;i < strlen(str);i++)
+    // char *str = "apna time ayenga";
+    int r;
+    if(xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY)  == pdTRUE)
     {
-        buf->payload[i] = str[i];
+        buf->payload[0] = (uint8_t) r;
     }
-    ESP_LOGI(TAG, "hello the payload is : %s",buf->payload);
+    else
+    {
+        ESP_LOGI(TAG, "data recive failed..........");
+    }
+    // for(int i=0;i < strlen(str);i++)
+    // {
+    //     buf->payload[i] = str[i];
+    // }
+    ESP_LOGI(TAG, "hello the payload is : %d",buf->payload[0]);
     /*----------------------------------------------------------------------------------------------------------*/
     buf->crc = esp_crc16_le(UINT16_MAX, (uint8_t const *)buf, send_param->len);
     ESP_LOGI(TAG, "exiting example_espnow_data_prepare");

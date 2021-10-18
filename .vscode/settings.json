@@ -5,6 +5,16 @@
         "esp_console.h": "c",
         "nvs_flash.h": "c",
         "esp_vfs_fat.h": "c",
-        "cmd_decl.h": "c"
+        "cmd_decl.h": "c",
+        "array": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "data_transfer.h": "c"
     }
 }

@@ -20,6 +20,7 @@
 #include "esp_vfs_fat.h"
 #include "nvs.h"
 #include "nvs_flash.h"
+#include "data_transfer.h"
 
 static const char* TAG = "example";
 #define PROMPT_STR CONFIG_IDF_TARGET
@@ -186,7 +187,7 @@ void app_main(void)
             linenoiseHistorySave(HISTORY_PATH);
 #endif
         }
-
+        console_to_espnow_send = xQueueCreate(10, sizeof(int));
         /* Try to run the command */
         int ret;
         esp_err_t err = esp_console_run(line, &ret);
