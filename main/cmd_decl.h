@@ -16,6 +16,7 @@ extern "C" {
 #include "cmd_wifi.h"
 #include "cmd_nvs.h"
 #include "data_transfer.h"
+#include "chat_espnow.h"
 
 #ifdef __cplusplus
 }

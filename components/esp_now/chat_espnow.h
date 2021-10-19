@@ -6,7 +6,7 @@
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
 */
-
+#include "esp_now.h"
 #ifndef ESPNOW_EXAMPLE_H
 #define ESPNOW_EXAMPLE_H
 
@@ -79,6 +79,6 @@ typedef struct {
     uint8_t dest_mac[ESP_NOW_ETH_ALEN];   //MAC address of destination device.
 } example_espnow_send_param_t;
 /* -------------------------------------------------------------------------------------------------------------------------- */
-// void start_console_self_defined(void);
+    void espnow_start(void);
 /* ---------------------------------------------------------------------------------------------------------------------------- */
 #endif

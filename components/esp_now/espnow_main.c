@@ -133,7 +133,6 @@ int example_espnow_data_parse(uint8_t *data, uint16_t data_len, uint8_t *state, 
 /* Prepare ESPNOW data to be sent. */
 void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
 {
-    ESP_LOGI(TAG, "entering example_espnow_data_prepare");
     example_espnow_data_t *buf = (example_espnow_data_t *)send_param->buffer;
 
     assert(send_param->len >= sizeof(example_espnow_data_t));
@@ -149,14 +148,10 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     /*----------------------------------------------------------------------------------------------------------*/
     // char *str = "apna time ayenga";
     int r;
-    if(xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY)  == pdTRUE)
-    {
-        buf->payload[0] = (uint8_t) r;
-    }
-    else
-    {
-        ESP_LOGI(TAG, "data recive failed..........");
-    }
+    xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY);
+    buf->payload[0] = (uint8_t) r;
+   
+    ESP_LOGI(TAG, "entering example_espnow_data_prepare");
     // for(int i=0;i < strlen(str);i++)
     // {
     //     buf->payload[i] = str[i];
@@ -383,7 +378,7 @@ static void example_espnow_deinit(example_espnow_send_param_t *send_param)
     esp_now_deinit();
 }
 
-void app_main(void)
+void espnow_start(void)
 {
     // Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -392,10 +387,7 @@ void app_main(void)
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
-    /*----------------------------------------------------------------------------------------------------------*/
-    // start_console_self_defined();
-    /*----------------------------------------------------------------------------------------------------------*/
     example_wifi_init();
     example_espnow_init();
-    // ESP_LOGI(TAG, "hmmmm______________________________MMMMM________________________________________________________");
+  
 }

@@ -126,7 +126,7 @@ static void initialize_console(void)
 void app_main(void)
 {
     initialize_nvs();
-
+    // espnow_start();
 #if CONFIG_STORE_HISTORY
     initialize_filesystem();
     ESP_LOGI(TAG, "Command history enabled");
@@ -188,6 +188,7 @@ void app_main(void)
 #endif
         }
         console_to_espnow_send = xQueueCreate(10, sizeof(int));
+        espnow_start();
         /* Try to run the command */
         int ret;
         esp_err_t err = esp_console_run(line, &ret);

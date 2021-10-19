@@ -144,11 +144,13 @@ static void register_heap(void)
 /*send the chat form console to esp now*/
 static int espnow_send(int argc, char**argv)
 {
+    
     int a = (int)(*argv[0]);
     if (xQueueSend(console_to_espnow_send, &a, portMAX_DELAY) != pdTRUE)
     {
         ESP_LOGW(TAG, "Send data to esp now failed.........");
     }
+    ESP_LOGI(TAG,"data send to espnow");
     return 0;
 }
 static void register_espnow_send(void)
