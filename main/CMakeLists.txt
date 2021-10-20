@@ -1,3 +1,2 @@
-idf_component_register(SRCS "cmd_wifi.c"
-                            "console_main.c"
+idf_component_register(SRCS "console_main.c"
                     INCLUDE_DIRS ".")

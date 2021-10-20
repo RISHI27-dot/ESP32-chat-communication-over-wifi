@@ -23,7 +23,7 @@
 #include "data_transfer.h"
 #include "chat_espnow.h"
 
-static const char* TAG = "example";
+static const char* TAG = "conslole_main";
 #define PROMPT_STR CONFIG_IDF_TARGET
 
 /* Console command history can be stored to and loaded from a file.
@@ -139,8 +139,6 @@ void app_main(void)
     /* Register commands */
     esp_console_register_help_command();
     register_system();
-    register_wifi();
-    register_nvs();
 
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
@@ -171,7 +169,8 @@ void app_main(void)
     }
 
     /* Main loop */
-    while(true) {
+    console_to_espnow_send = xQueueCreate(10, sizeof(int));
+    while(1) {
         /* Get a line using linenoise.
          * The line is returned when ENTER is pressed.
          */
@@ -187,7 +186,6 @@ void app_main(void)
             linenoiseHistorySave(HISTORY_PATH);
 #endif
         }
-        console_to_espnow_send = xQueueCreate(10, sizeof(int));
         /* Try to run the command */
         int ret;
         esp_err_t err = esp_console_run(line, &ret);
