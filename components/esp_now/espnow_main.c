@@ -147,11 +147,11 @@ void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
     //  esp_fill_random(buf->payload, send_param->len - sizeof(example_espnow_data_t));
     /*----------------------------------------------------------------------------------------------------------*/
     // char *str = "apna time ayenga";
+    ESP_LOGI(TAG, "entering example_espnow_data_prepare");
     int r;
     xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY);
     buf->payload[0] = (uint8_t) r;
    
-    ESP_LOGI(TAG, "entering example_espnow_data_prepare");
     // for(int i=0;i < strlen(str);i++)
     // {
     //     buf->payload[i] = str[i];
@@ -189,6 +189,7 @@ static void example_espnow_task(void *pvParameter)
         switch (evt.id) {
             case EXAMPLE_ESPNOW_SEND_CB:
             {
+            ESP_LOGI(TAG, "/////////////////////////////////////////////////////////////////////////////////////////");
                 example_espnow_event_send_cb_t *send_cb = &evt.info.send_cb;
                 is_broadcast = IS_BROADCAST_ADDR(send_cb->mac_addr);
 
@@ -363,8 +364,8 @@ static esp_err_t example_espnow_init(void)
         return ESP_FAIL;
     }
     memcpy(send_param->dest_mac, s_example_broadcast_mac, ESP_NOW_ETH_ALEN);
+    ESP_LOGI(TAG,"----------------------------------------------------------------------------------");
     example_espnow_data_prepare(send_param);
-    
     xTaskCreate(example_espnow_task, "example_espnow_task", 2048, send_param, 4, NULL);
     return ESP_OK;
     ESP_LOGI(TAG, "exiting example_espnow_init");
@@ -381,13 +382,16 @@ static void example_espnow_deinit(example_espnow_send_param_t *send_param)
 void espnow_start(void)
 {
     // Initialize NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK( nvs_flash_erase() );
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK( ret );
-    example_wifi_init();
-    example_espnow_init();
+    // esp_err_t ret = nvs_flash_init();
+    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    //     ESP_ERROR_CHECK( nvs_flash_erase() );
+    //     ret = nvs_flash_init();
+    // }
+    // ESP_ERROR_CHECK( ret );
+    // example_wifi_init();
+    // example_espnow_init();
+    char* r;
+    xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY);
+    ESP_LOGI(TAG,"the number recived form console is ::: %s",r);
   
 }

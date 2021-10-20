@@ -19,6 +19,8 @@
 #define ESPNOW_WIFI_IF   ESP_IF_WIFI_AP
 #endif
 
+void espnow_start(void);
+
 #define ESPNOW_QUEUE_SIZE           6
 
 #define IS_BROADCAST_ADDR(addr) (memcmp(addr, s_example_broadcast_mac, ESP_NOW_ETH_ALEN) == 0)

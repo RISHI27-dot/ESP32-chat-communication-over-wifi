@@ -21,6 +21,7 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "data_transfer.h"
+#include "chat_espnow.h"
 
 static const char* TAG = "example";
 #define PROMPT_STR CONFIG_IDF_TARGET
@@ -126,7 +127,6 @@ static void initialize_console(void)
 void app_main(void)
 {
     initialize_nvs();
-    // espnow_start();
 #if CONFIG_STORE_HISTORY
     initialize_filesystem();
     ESP_LOGI(TAG, "Command history enabled");
@@ -188,7 +188,6 @@ void app_main(void)
 #endif
         }
         console_to_espnow_send = xQueueCreate(10, sizeof(int));
-        espnow_start();
         /* Try to run the command */
         int ret;
         esp_err_t err = esp_console_run(line, &ret);
@@ -201,7 +200,9 @@ void app_main(void)
         } else if (err != ESP_OK) {
             printf("Internal error: %s\n", esp_err_to_name(err));
         }
+        espnow_start();
         /* linenoise allocates line buffer on the heap, so need to free it */
+        // espnow_start();
         linenoiseFree(line);
     }
 
