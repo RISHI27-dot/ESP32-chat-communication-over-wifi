@@ -200,9 +200,8 @@ void app_main(void)
         } else if (err != ESP_OK) {
             printf("Internal error: %s\n", esp_err_to_name(err));
         }
-        espnow_start();
-        /* linenoise allocates line buffer on the heap, so need to free it */
         // espnow_start();
+        /* linenoise allocates line buffer on the heap, so need to free it */
         linenoiseFree(line);
     }
 

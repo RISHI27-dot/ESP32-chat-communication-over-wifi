@@ -23,6 +23,7 @@
 #include "cmd_system.h"
 #include "sdkconfig.h"
 #include "data_transfer.h"
+#include "chat_espnow.h"
 
 #ifdef CONFIG_FREERTOS_USE_STATS_FORMATTING_FUNCTIONS
 #define WITH_TASKS_INFO 1
@@ -151,6 +152,7 @@ static int espnow_send(int argc, char**argv)
         ESP_LOGW(TAG, "Send data to esp now failed.........");
     }
     ESP_LOGI(TAG,"data sent to espnow is %s",asdf);
+    espnow_start();
     return 0;
 }
 static void register_espnow_send(void)

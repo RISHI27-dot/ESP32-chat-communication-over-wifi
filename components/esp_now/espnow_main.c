@@ -391,7 +391,10 @@ void espnow_start(void)
     // example_wifi_init();
     // example_espnow_init();
     char* r;
-    xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY);
+    if(xQueueReceive(console_to_espnow_send,&r,portMAX_DELAY)!=pdTRUE)
+    {
+        ESP_LOGI(TAG,"failed to recive from the queue");
+    }
     ESP_LOGI(TAG,"the number recived form console is ::: %s",r);
   
 }
