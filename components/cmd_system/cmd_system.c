@@ -32,6 +32,7 @@
 static const char *TAG = "cmd_system";
 static void register_restart(void);
 static void register_espnow_send(void);
+static void register_initialize_chat(void);
 
 #if WITH_TASKS_INFO
 static void register_tasks(void);
@@ -41,6 +42,7 @@ void register_system(void)
 {
     register_restart();
     register_espnow_send();
+    register_initialize_chat();
 #if WITH_TASKS_INFO
     register_tasks();
 #endif
@@ -63,7 +65,21 @@ static void register_restart(void)
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
 
-
+/*initialize chat system*/
+void start_chat_communication(void)
+{
+    espnow_start();
+}
+static void register_initialize_chat(void)
+{
+    const esp_console_cmd_t start_chat = {
+        .command = "start",
+        .help = "starts the chat system..",
+        .hint = NULL,
+        .func = &start_chat_communication,
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&start_chat));
+}
 /*send the chat form console to esp now commandS*/
 static int espnow_send(int argc, char**argv)
 {
