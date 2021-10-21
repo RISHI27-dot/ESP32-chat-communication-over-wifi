@@ -176,13 +176,14 @@ void app_main(void)
         /* Get a line using linenoise.
          * The line is returned when ENTER is pressed.
          */
-        char *str1;
-        char *str2;
-        str1 = "gogo ";
-        str2 = linenoise(prompt);
-        char *line = (char *)malloc(1 + sizeof(char *) * (strlen(str1) + strlen(str2)));
-        strcpy(line, str1);
-        strcat(line, str2);
+        char *line = linenoise(prompt);
+        // char *str1;
+        // char *str2;
+        // str1 = "gogo ";
+        // str2 = linenoise(prompt);
+        // char *line = (char *)malloc(1 + sizeof(char *) * (strlen(str1) + strlen(str2)));
+        // strcpy(line, str1);
+        // strcat(line, str2);
 
         if (line == NULL)
         { /* Break on EOF or error */

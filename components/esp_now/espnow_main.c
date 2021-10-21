@@ -53,7 +53,7 @@ void espnow_start(void)
     uint8_t my_mac[6];
     esp_efuse_mac_get_default(my_mac);
     char my_mac_str[13];
-    ESP_LOGI(TAG, "My mac %s", mac_to_str(my_mac_str, my_mac));
+    // ESP_LOGI(TAG, "My mac %s", mac_to_str(my_mac_str, my_mac));
     bool is_current_esp1 = memcmp(my_mac, esp_1, 6) == 0;
     uint8_t *peer_mac = is_current_esp1 ? esp_2 : esp_1;
 
