@@ -23,7 +23,7 @@
 #include "data_transfer.h"
 #include "chat_espnow.h"
 
-static const char* TAG = "conslole_main";
+static const char *TAG = "conslole_main";
 #define PROMPT_STR CONFIG_IDF_TARGET
 
 /* Console command history can be stored to and loaded from a file.
@@ -39,11 +39,11 @@ static void initialize_filesystem(void)
 {
     static wl_handle_t wl_handle;
     const esp_vfs_fat_mount_config_t mount_config = {
-            .max_files = 4,
-            .format_if_mount_failed = true
-    };
+        .max_files = 4,
+        .format_if_mount_failed = true};
     esp_err_t err = esp_vfs_fat_spiflash_mount(MOUNT_PATH, "storage", &mount_config, &wl_handle);
-    if (err != ESP_OK) {
+    if (err != ESP_OK)
+    {
         ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
         return;
     }
@@ -53,8 +53,9 @@ static void initialize_filesystem(void)
 static void initialize_nvs(void)
 {
     esp_err_t err = nvs_flash_init();
-    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK( nvs_flash_erase() );
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
         err = nvs_flash_init();
     }
     ESP_ERROR_CHECK(err);
@@ -78,29 +79,28 @@ static void initialize_console(void)
      * correct while APB frequency is changing in light sleep mode.
      */
     const uart_config_t uart_config = {
-            .baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE,
-            .data_bits = UART_DATA_8_BITS,
-            .parity = UART_PARITY_DISABLE,
-            .stop_bits = UART_STOP_BITS_1,
-            .source_clk = UART_SCLK_REF_TICK,
+        .baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE,
+        .data_bits = UART_DATA_8_BITS,
+        .parity = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .source_clk = UART_SCLK_REF_TICK,
     };
     /* Install UART driver for interrupt-driven reads and writes */
-    ESP_ERROR_CHECK( uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
-            256, 0, 0, NULL, 0) );
-    ESP_ERROR_CHECK( uart_param_config(CONFIG_ESP_CONSOLE_UART_NUM, &uart_config) );
+    ESP_ERROR_CHECK(uart_driver_install(CONFIG_ESP_CONSOLE_UART_NUM,
+                                        256, 0, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_param_config(CONFIG_ESP_CONSOLE_UART_NUM, &uart_config));
 
     /* Tell VFS to use UART driver */
     esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
 
     /* Initialize the console */
-    esp_console_config_t console_config = {
-            .max_cmdline_args = 8,
-            .max_cmdline_length = 256,
+    esp_console_config_t console_config = {.max_cmdline_args = 8,
+                                           .max_cmdline_length = 256,
 #if CONFIG_LOG_COLORS
-            .hint_color = atoi(LOG_COLOR_CYAN)
+                                           .hint_color = atoi(LOG_COLOR_CYAN)
 #endif
     };
-    ESP_ERROR_CHECK( esp_console_init(&console_config) );
+    ESP_ERROR_CHECK(esp_console_init(&console_config));
 
     /* Configure linenoise line completion library */
     /* Enable multiline editing. If not set, long commands will scroll within
@@ -110,7 +110,7 @@ static void initialize_console(void)
 
     /* Tell linenoise where to get command completions and hints */
     linenoiseSetCompletionCallback(&esp_console_get_completion);
-    linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
+    linenoiseSetHintsCallback((linenoiseHintsCallback *)&esp_console_get_hint);
 
     /* Set command history size */
     linenoiseHistorySetMaxLen(100);
@@ -143,7 +143,7 @@ void app_main(void)
     /* Prompt to be printed before each line.
      * This can be customized, made dynamic, etc.
      */
-    const char* prompt = LOG_COLOR_I PROMPT_STR "> " LOG_RESET_COLOR;
+    const char *prompt = LOG_COLOR_I PROMPT_STR "> " LOG_RESET_COLOR;
 
     printf("\n"
            "This is an example of ESP-IDF console component.\n"
@@ -154,7 +154,8 @@ void app_main(void)
 
     /* Figure out if the terminal supports escape sequences */
     int probe_status = linenoiseProbe();
-    if (probe_status) { /* zero indicates success */
+    if (probe_status)
+    { /* zero indicates success */
         printf("\n"
                "Your terminal application does not support escape sequences.\n"
                "Line editing and history features are disabled.\n"
@@ -170,16 +171,26 @@ void app_main(void)
 
     /* Main loop */
     console_to_espnow_send = xQueueCreate(10, sizeof(int));
-    while(1) {
+    while (1)
+    {
         /* Get a line using linenoise.
          * The line is returned when ENTER is pressed.
          */
-        char* line = linenoise(prompt);
-        if (line == NULL) { /* Break on EOF or error */
+        char *str1;
+        char *str2;
+        str1 = "gogo ";
+        str2 = linenoise(prompt);
+        char *line = (char *)malloc(1 + sizeof(char *) * (strlen(str1) + strlen(str2)));
+        strcpy(line, str1);
+        strcat(line, str2);
+
+        if (line == NULL)
+        { /* Break on EOF or error */
             break;
         }
         /* Add the command to the history if not empty*/
-        if (strlen(line) > 0) {
+        if (strlen(line) > 0)
+        {
             linenoiseHistoryAdd(line);
 #if CONFIG_STORE_HISTORY
             /* Save command history to filesystem */
@@ -189,13 +200,20 @@ void app_main(void)
         /* Try to run the command */
         int ret;
         esp_err_t err = esp_console_run(line, &ret);
-        if (err == ESP_ERR_NOT_FOUND) {
+        if (err == ESP_ERR_NOT_FOUND)
+        {
             printf("Unrecognized command\n");
-        } else if (err == ESP_ERR_INVALID_ARG) {
+        }
+        else if (err == ESP_ERR_INVALID_ARG)
+        {
             // command was empty
-        } else if (err == ESP_OK && ret != ESP_OK) {
+        }
+        else if (err == ESP_OK && ret != ESP_OK)
+        {
             printf("Command returned non-zero error code: 0x%x (%s)\n", ret, esp_err_to_name(ret));
-        } else if (err != ESP_OK) {
+        }
+        else if (err != ESP_OK)
+        {
             printf("Internal error: %s\n", esp_err_to_name(err));
         }
         // espnow_start();
