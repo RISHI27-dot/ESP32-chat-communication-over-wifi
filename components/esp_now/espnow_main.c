@@ -48,24 +48,24 @@ void on_receive(const uint8_t *mac_addr, const uint8_t *data, int data_len)
     printf("inside recive callback data recived");
     data_recived = data;
 }
-void send_task(void)
+void send_task(void*p)
 {
     char *r;
     if (xQueueReceive(console_to_espnow_send, &r, portMAX_DELAY) != pdTRUE)
     {
         ESP_LOGI(TAG, "failed to recive from the queue");
     }
-    ESP_LOGI(TAG, "the message recived form console is ::: %s", r);
+    ESP_LOGI(TAG, "the message recived form console is ::: %s ::", r);
     char send_buffer[250];
     memcpy(send_buffer, r, 100);
     while (1)
     {
         ESP_ERROR_CHECK(esp_now_send(NULL, (uint8_t *)send_buffer, strlen(send_buffer)));
         printf("send done probably\n");
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
 }
-void recive_task(void)
+void recive_task(void*p)
 {
     while (1)
     {
@@ -80,9 +80,10 @@ void recive_task(void)
 }
 void espnow_start(void)
 {
+
     uint8_t my_mac[6];
     esp_efuse_mac_get_default(my_mac);
-    char my_mac_str[13];
+    // char my_mac_str[13];
     // ESP_LOGI(TAG, "My mac %s", mac_to_str(my_mac_str, my_mac));
     bool is_current_esp1 = memcmp(my_mac, esp_1, 6) == 0;
     uint8_t *peer_mac = is_current_esp1 ? esp_2 : esp_1;
@@ -119,6 +120,6 @@ void espnow_start(void)
         4,
         &recive_task_handle);
 
-    ESP_ERROR_CHECK(esp_now_deinit());
-    ESP_ERROR_CHECK(esp_wifi_stop());
+    // ESP_ERROR_CHECK(esp_now_deinit());
+    // ESP_ERROR_CHECK(esp_wifi_stop());
 }
