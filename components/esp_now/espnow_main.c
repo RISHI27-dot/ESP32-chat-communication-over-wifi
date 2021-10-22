@@ -31,16 +31,16 @@ char *mac_to_str(char *buffer, uint8_t *mac)
 
 void on_sent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
-    char buffer[13];
-    switch (status)
-    {
-    case ESP_NOW_SEND_SUCCESS:
-        ESP_LOGI(TAG, "message sent to %s", mac_to_str(buffer, (uint8_t *)mac_addr));
-        break;
-    case ESP_NOW_SEND_FAIL:
-        ESP_LOGE(TAG, "message sent to %s failed", mac_to_str(buffer, (uint8_t *)mac_addr));
-        break;
-    }
+    // char buffer[13];
+    // switch (status)
+    // {
+    // case ESP_NOW_SEND_SUCCESS:
+    //     ESP_LOGI(TAG, "message sent to %s", mac_to_str(buffer, (uint8_t *)mac_addr));
+    //     break;
+    // case ESP_NOW_SEND_FAIL:
+    //     ESP_LOGE(TAG, "message sent to %s failed", mac_to_str(buffer, (uint8_t *)mac_addr));
+    //     break;
+    // }
 }
 
 void on_receive(const uint8_t *mac_addr, const uint8_t *data, int data_len)
@@ -50,26 +50,25 @@ void on_receive(const uint8_t *mac_addr, const uint8_t *data, int data_len)
 }
 void send_task(void*p)
 {
-    char *r;
+    char r[250];
+    //get the string from conole stdin of start command
     if (xQueueReceive(console_to_espnow_send, &r, portMAX_DELAY) != pdTRUE)
     {
         ESP_LOGI(TAG, "failed to recive from the queue");
     }
-    ESP_LOGI(TAG, "the message recived form console is ::: %s ::", r);
+    // ESP_LOGI(TAG, "the message recived form console is ::: %s ::", r);
     char send_buffer[250];
-    memcpy(send_buffer, r, 100);
+    memcpy(send_buffer, r, 250);
     while (1)
     {
         ESP_ERROR_CHECK(esp_now_send(NULL, (uint8_t *)send_buffer, strlen(send_buffer)));
-        printf("send done probably\n");
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 void recive_task(void*p)
 {
     while (1)
     {
-        char buffer[13];
         // ESP_LOGI(TAG, "got message from %s", mac_to_str(buffer, (uint8_t *)mac_addr));
         if(data_len_recived != 0)
         {

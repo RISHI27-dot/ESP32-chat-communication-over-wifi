@@ -65,22 +65,22 @@ static void register_restart(void)
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
 
-/*initialize chat system*/
+/*send the message from the stdin*/
 void start_chat_communication(void)
 {
-    // espnow_start();
     while (1)
     {
-        char line_to_pass[50];
         printf("enter a message => ");
+        char line_to_pass[250];
         scanf("%s",line_to_pass);
-        printf("the messagae you entered is %s\n", line_to_pass);
+        printf("%s\n", line_to_pass);
+        //send the message from here to espnow_main.c through queue
         if (xQueueSend(console_to_espnow_send, &line_to_pass, portMAX_DELAY) != pdTRUE)
         {
             ESP_LOGW(TAG, "Send data to esp now failed.........");
         }
-        ESP_LOGI(TAG, "data sent to espnow is %s", line_to_pass);
-        vTaskDelay(3000/portTICK_PERIOD_MS);
+        // ESP_LOGI(TAG, "data sent to espnow is %s", line_to_pass);
+        vTaskDelay(1000/portTICK_PERIOD_MS);
     }
 }
 static void register_initialize_chat(void)
@@ -93,16 +93,9 @@ static void register_initialize_chat(void)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&start_chat));
 }
-/*send the chat form console to esp now commandS*/
+/*setup esp now, send and recive tasks*/
 static int espnow_setup(int argc, char **argv)
 {
-    // printf("the argc is : %d and the argv1 is %s",argc,argv[1]);
-    // char *asdf = argv[1];
-    // if (xQueueSend(console_to_espnow_send, &asdf, portMAX_DELAY) != pdTRUE)
-    // {
-    //     ESP_LOGW(TAG, "Send data to esp now failed.........");
-    // }
-    // ESP_LOGI(TAG, "data sent to espnow is %s", asdf);
     espnow_start();
     return 0;
 }

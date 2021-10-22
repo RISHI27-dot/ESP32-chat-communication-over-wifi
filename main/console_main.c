@@ -170,7 +170,7 @@ void app_main(void)
     }
 
     /* Main loop */
-    console_to_espnow_send = xQueueCreate(10, sizeof(int));
+    console_to_espnow_send = xQueueCreate(5, 250*sizeof(char));
     while (1)
     {
         /* Get a line using linenoise.
