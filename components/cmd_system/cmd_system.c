@@ -69,6 +69,17 @@ static void register_restart(void)
 void start_chat_communication(void)
 {
     espnow_start();
+    while (1)
+    {
+        char line[50];
+        scanf("%s", line);
+        printf("the messagae you entered is %s\n", line);
+        if (xQueueSend(console_to_espnow_send, &line, portMAX_DELAY) != pdTRUE)
+        {
+            ESP_LOGW(TAG, "Send data to esp now failed.........");
+        }
+        ESP_LOGI(TAG, "data sent to espnow is %s", line);
+    }
 }
 static void register_initialize_chat(void)
 {
@@ -81,7 +92,7 @@ static void register_initialize_chat(void)
     ESP_ERROR_CHECK(esp_console_cmd_register(&start_chat));
 }
 /*send the chat form console to esp now commandS*/
-static int espnow_send(int argc, char**argv)
+static int espnow_send(int argc, char **argv)
 {
     // printf("the argc is : %d and the argv1 is %s",argc,argv[1]);
     char *asdf = argv[1];
@@ -89,21 +100,20 @@ static int espnow_send(int argc, char**argv)
     {
         ESP_LOGW(TAG, "Send data to esp now failed.........");
     }
-    ESP_LOGI(TAG,"data sent to espnow is %s",asdf);
+    ESP_LOGI(TAG, "data sent to espnow is %s", asdf);
     espnow_start();
     return 0;
 }
 static void register_espnow_send(void)
 {
     const esp_console_cmd_t espnow_send_cmd = {
-        .command = "gogo",
+        .command = "send",
         .help = "send data to esp now",
         .hint = NULL,
         .func = &espnow_send,
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&espnow_send_cmd));
 }
-
 
 /** 'tasks' command prints the list of tasks and related information */
 #if WITH_TASKS_INFO
@@ -139,10 +149,3 @@ static void register_tasks(void)
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
 #endif
-
-
-
-
-
-
-

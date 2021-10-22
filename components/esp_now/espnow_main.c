@@ -17,10 +17,12 @@
 #include "data_transfer.h"
 
 #define TAG "ESP_NOW"
-
+TaskHandle_t send_task_handle = NULL;
+TaskHandle_t recive_task_handle = NULL;
 uint8_t esp_1[6] = {0x30, 0xae, 0xa4, 0x25, 0x15, 0xc8};
 uint8_t esp_2[6] = {0x24, 0x6f, 0x28, 0x95, 0xa7, 0xb0};
-
+const uint8_t *data_recived;
+int data_len_recived = 0;
 char *mac_to_str(char *buffer, uint8_t *mac)
 {
     sprintf(buffer, "%02x%02x%02x%02x%02x%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
@@ -43,11 +45,39 @@ void on_sent(const uint8_t *mac_addr, esp_now_send_status_t status)
 
 void on_receive(const uint8_t *mac_addr, const uint8_t *data, int data_len)
 {
-    char buffer[13];
-    ESP_LOGI(TAG, "got message from %s", mac_to_str(buffer, (uint8_t *)mac_addr));
-    printf("message: %.*s\n", data_len, data);
+    printf("inside recive callback data recived");
+    data_recived = data;
 }
-
+void send_task(void)
+{
+    char *r;
+    if (xQueueReceive(console_to_espnow_send, &r, portMAX_DELAY) != pdTRUE)
+    {
+        ESP_LOGI(TAG, "failed to recive from the queue");
+    }
+    ESP_LOGI(TAG, "the message recived form console is ::: %s", r);
+    char send_buffer[250];
+    memcpy(send_buffer, r, 100);
+    while (1)
+    {
+        ESP_ERROR_CHECK(esp_now_send(NULL, (uint8_t *)send_buffer, strlen(send_buffer)));
+        printf("send done probably\n");
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
+void recive_task(void)
+{
+    while (1)
+    {
+        char buffer[13];
+        // ESP_LOGI(TAG, "got message from %s", mac_to_str(buffer, (uint8_t *)mac_addr));
+        if(data_len_recived != 0)
+        {
+            printf("message: %.*s\n", data_len_recived, data_recived);
+        }
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+    }
+}
 void espnow_start(void)
 {
     uint8_t my_mac[6];
@@ -69,22 +99,26 @@ void espnow_start(void)
     ESP_ERROR_CHECK(esp_now_init());
     ESP_ERROR_CHECK(esp_now_register_send_cb(on_sent));
     ESP_ERROR_CHECK(esp_now_register_recv_cb(on_receive));
-
     esp_now_peer_info_t peer;
     memset(&peer, 0, sizeof(esp_now_peer_info_t));
     memcpy(peer.peer_addr, peer_mac, 6);
-
     esp_now_add_peer(&peer);
-    char *r;
-    if (xQueueReceive(console_to_espnow_send, &r, portMAX_DELAY) != pdTRUE)
-    {
-        ESP_LOGI(TAG, "failed to recive from the queue");
-    }
-    ESP_LOGI(TAG, "the message recived form console is ::: %s", r);
-    char send_buffer[250];
-    memcpy(send_buffer,r,100);
-    ESP_ERROR_CHECK(esp_now_send(NULL, (uint8_t *)send_buffer, strlen(send_buffer)));
-    printf("send done probably\n");
+
+    xTaskCreate(
+        send_task,
+        "send_task",
+        4096,
+        NULL,
+        4,
+        &send_task_handle);
+    xTaskCreate(
+        recive_task,
+        "recive_task",
+        4096,
+        NULL,
+        4,
+        &recive_task_handle);
+
     ESP_ERROR_CHECK(esp_now_deinit());
     ESP_ERROR_CHECK(esp_wifi_stop());
 }
