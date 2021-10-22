@@ -45,8 +45,9 @@ void on_sent(const uint8_t *mac_addr, esp_now_send_status_t status)
 
 void on_receive(const uint8_t *mac_addr, const uint8_t *data, int data_len)
 {
-    printf("inside recive callback data recived");
+    // printf("inside recive callback data recived");
     data_recived = data;
+    data_len_recived = data_len;
 }
 void send_task(void*p)
 {
@@ -72,7 +73,7 @@ void recive_task(void*p)
         // ESP_LOGI(TAG, "got message from %s", mac_to_str(buffer, (uint8_t *)mac_addr));
         if(data_len_recived != 0)
         {
-            printf("message: %.*s\n", data_len_recived, data_recived);
+            printf("message: %s\n",data_recived);
         }
         vTaskDelay(1000/portTICK_PERIOD_MS);
     }
