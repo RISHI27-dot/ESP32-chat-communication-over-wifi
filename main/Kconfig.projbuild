@@ -1,4 +1,4 @@
-menu "Example Configuration"
+menu "Chat history"
 
     config STORE_HISTORY
         bool "Store command history in flash"
