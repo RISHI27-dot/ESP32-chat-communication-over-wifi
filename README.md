@@ -76,6 +76,13 @@ Configuration
 ```
 idf.py menuconfig
 ```
+* `Chat history`
+  * `Store command history in flash` - to store the chat history ans use previous chats
+  
+* `ESP-NOW Configuration`
+  * `Send len` - espnow packet lenght
+
+![**menuconfig image**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/menuconfig.png) 
 Build
 ```
 idf.py build
@@ -85,11 +92,7 @@ Flash
 idf.py -p (PORT) flash monitor
 
 ```
-* `Chat history`
-  * `Store command history in flash` - to store the chat history ans use previous chats
-  
-* `ESP-NOW Configuration`
-  * `Send len` - espnow packet lenght
+
 
 
 
