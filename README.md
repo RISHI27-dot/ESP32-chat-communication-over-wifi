@@ -119,11 +119,11 @@ Use the upper arrow keys to access previous chat.
 
 <!-- ACKNOWLEDGEMENTS AND REFERENCES -->
 ## Acknowledgements and Resources
-* [SRA VJTI](http://sra.vjti.info/) Eklavya 2020  
+* [SRA VJTI](http://sra.vjti.info/) Eklavya 2020
+* Special thanks to [Gautam Agrawal](https://github.com/gautam-dev-maker)  
 * Refered [FreeRTOS](https://www.freertos.org/) for FreeRTOS API
 * Refered [ESP_NOW](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html) for ESP-NOW API
-  
-...
+
 
 
 <!-- LICENSE -->
