@@ -71,6 +71,11 @@ git clone https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+Configuration
+
+```
+idf.py menuconfig
+```
 Build
 ```
 idf.py build
@@ -79,11 +84,6 @@ Flash
 ```
 idf.py -p (PORT) flash monitor
 
-```
-### Configuration
-
-```
-idf.py menuconfig
 ```
 * `Chat history`
   * `Store command history in flash` - to store the chat history ans use previous chats
@@ -102,8 +102,8 @@ Use the upper arrow keys to access previous chat.
 
 <!-- FUTURE WORK -->
 ## Future Work
-- [x] Add a http web server chat interface
-- [x] Add encryption to the chat communication
+- [] Add a http web server chat interface
+- [] Add encryption to the chat communication
 
 
 <!-- TROUBLESHOOTING -->
