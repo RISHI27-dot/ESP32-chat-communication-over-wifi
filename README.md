@@ -95,10 +95,8 @@ idf.py -p (PORT) flash monitor
 
 <!-- RESULTS AND DEMO -->
 ## Results and Demo
-Use the upper arrow keys to access previous chat.
-
-[**result screenshots---TODO**](https://result.png)  
-![**result gif or video ----TODO**](https://result.gif)  
+ 
+![**result gif**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/result.gif)  
 
 <!-- FUTURE WORK -->
 ## Future Work
