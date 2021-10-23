@@ -130,14 +130,16 @@ void task_console()
     {
         /* Get a line using linenoise.
          * The line is returned when ENTER is pressed.
+         *if the user enters a null message the prompt again for message
          */
+
         char *line = linenoise(prompt);
         while (line == NULL) { /* Break on EOF or error */
             ESP_LOGW(TAG, "Enter a message!!");
             line = linenoise(prompt);
         }
-        /* Add the command to the history if not empty*/
         console_to_espnow_send = xQueueCreate(10, 250 * sizeof(char));
+        /* Add the command to the history if not empty*/
         if (strlen(line) > 0)
         {
             linenoiseHistoryAdd(line);
@@ -166,15 +168,12 @@ void app_main(void)
 #else
     ESP_LOGI(TAG, "Command history disabled");
 #endif
-
+    /*to initialize the console in default configurarion to take user input for terminal*/
     initialize_console();
+    /*setup espnow interconnection*/
     espnowinit();
 
-    /* Prompt to be printed before each line.
-     * This can be customized, made dynamic, etc.
-     */
-
-    printf("\nChat Communication\n");
+    printf("\nChat Communication\n");//start of the chat communication
 
     /* Figure out if the terminal supports escape sequences */
     int probe_status = linenoiseProbe();
@@ -186,7 +185,7 @@ void app_main(void)
          * don't use color codes in the prompt.
          */
         prompt = PROMPT_STR "> ";
-#endif //CONFIG_LOG_COLORS
+#endif
     }
     xTaskCreate(task_console, "task_console", 3000, NULL, 3, &console);
 }
