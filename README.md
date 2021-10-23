@@ -95,8 +95,6 @@ idf.py -p (PORT) flash monitor
 ```
 
 
-
-
 <!-- RESULTS AND DEMO -->
 ## Results and Demo
  
@@ -107,10 +105,6 @@ idf.py -p (PORT) flash monitor
 - [ ] Add a http web server chat interface
 - [ ] Add encryption to the chat communication
 
-
-<!-- TROUBLESHOOTING -->
-## Troubleshooting
-* TODO
 
 
 <!-- CONTRIBUTORS -->
