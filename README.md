@@ -23,7 +23,7 @@ The aim of the project is to build chat system using two esp32 devlopment bords.
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-[![Product Name Screen Shot][product-screenshot]](https://example.com)  
+
 
 * Aim of the project is to build a chat system between two ESP32 devlopment bords.
 * Communication protocol used is ESP-NOW.
