@@ -63,7 +63,7 @@ Refer this [documentation](https://link/to/report/)
   You can visit the [ESP-IDF Programmming Guide](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html#installation-step-by-step) for the installation steps.
 
 ### Installation
-1. Clone the repo
+Clone the repo
 ```sh
 git clone https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi
 ```
@@ -71,7 +71,7 @@ git clone https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-Configuration
+### Configuration
 
 ```
 idf.py menuconfig
@@ -83,11 +83,12 @@ idf.py menuconfig
   * `Send len` - espnow packet lenght
 
 ![**menuconfig image**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/menuconfig.png) 
-Build
+
+### Build
 ```
 idf.py build
 ```
-Flash
+### Flash
 ```
 idf.py -p (PORT) flash monitor
 
