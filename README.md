@@ -103,7 +103,7 @@ Use the upper arrow keys to access previous chat.
 <!-- FUTURE WORK -->
 ## Future Work
 - [ ] Add a http web server chat interface
-- [] Add encryption to the chat communication
+- [ ] Add encryption to the chat communication
 
 
 <!-- TROUBLESHOOTING -->
