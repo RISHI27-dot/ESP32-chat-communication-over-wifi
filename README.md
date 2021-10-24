@@ -1,6 +1,6 @@
 
 # ESP32-chat-communication-over-wifi 
-The aim of the project is to build chat system using two esp32 devlopment bords.  
+The aim of the project is to build a chat system using two esp32 development boards.  
 
 
 <!-- TABLE OF CONTENTS -->
@@ -25,12 +25,12 @@ The aim of the project is to build chat system using two esp32 devlopment bords.
 ## About The Project
 
 
-* Aim of the project is to build a chat system between two ESP32 devlopment bords.
-* The chat systems should be fast,secure and easy to use.
+* Aim of the project is to build a chat system between two ESP32 development boards.
+* The chat system should be fast,secure and easy to use.
 * Communication protocol used is ESP-NOW as
-  * It ovecomes the drawbacks of traditonal wifi connection.
+  * It overcomes the drawbacks of traditonal wifi connection.
   * The pairing between devices is needed prior to their communication. After the pairing is done, the connection is secure and peer-to-peer.
-  * ESP NOW does not require a router for the connection,Thus this project can be used anywhere,at any remote palces.
+  * ESP NOW does not require a router for the connection,Thus this project can be used anywhere,at any remote places.
   * If suddenly one of the boards loses power or resets, when it restarts, it will automatically connect to its peers.
 
 To read more about the project refer this [documentation](https://link/to/report/)
@@ -82,10 +82,10 @@ git clone https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi
 idf.py menuconfig
 ```
 * `Chat history`
-  * `Store command history in flash` - to store the chat history ans use previous chats
+  * `Store command history in flash` - to store the chat history ans use previous chats.
   
 * `ESP-NOW Configuration`
-  * `Send len` - espnow packet lenght
+  * `Send len` - espnow packet lenght.
 
 ![**menuconfig image**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/menuconfig.png) 
 
@@ -93,17 +93,23 @@ idf.py menuconfig
 ```
 idf.py build
 ```
-### Flash
+### Flash and Monitor
+* Connect two esp32 through ports and run the following command on two seprate terminals.
+* The terminals will act as user interface. 
 ```
-idf.py -p (PORT) flash monitor
+idf.py -p /dev/ttyUSB0 flash monitor
+
+```
+```
+idf.py -p /dev/ttyUSB1 flash monitor
 
 ```
 <!-- CODE  -->
 ## Code
-* The input of chat is taken from the user through console.
+* The input of chat is taken from the user through the console.
 * The chat data is sent to espnow and console task suspended,chat data is sent to other esp32 board.
 * Console task is resumed to take the next chat.
-* When the chat data is recived by the other esp32 board it is printed to the console.
+* When the chat data is received by the other esp32 board it is printed to the console.
 
 
 ![**flowchart**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/code_flow.png)
@@ -114,8 +120,8 @@ idf.py -p (PORT) flash monitor
 
 <!-- FUTURE WORK -->
 ## Future Work
-- [ ] Add a http web server chat interface
-- [ ] Add encryption to the chat communication
+- [ ] Add a http web server chat interface.
+- [ ] Add encryption to the chat communication.
 
 
 
@@ -129,9 +135,11 @@ idf.py -p (PORT) flash monitor
 <!-- ACKNOWLEDGEMENTS AND REFERENCES -->
 ## Acknowledgements and Resources
 * [SRA VJTI](http://sra.vjti.info/) Eklavya 2020
-* Special thanks to [Gautam Agrawal](https://github.com/gautam-dev-maker)  
-* Refered [FreeRTOS](https://www.freertos.org/) for FreeRTOS API
-* Refered [ESP_NOW](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html) for ESP-NOW API
+* Special thanks 
+  * [Gautam Agrawal](https://github.com/gautam-dev-maker)
+  * [Dhairya Shah](https://github.com/dhairyashah1)  
+* Refered [FreeRTOS](https://www.freertos.org/) for FreeRTOS API.
+* Refered [ESP_NOW](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html) for ESP-NOW API.
 
 
 
