@@ -29,8 +29,8 @@ The aim of the project is to build chat system using two esp32 devlopment bords.
 * The chat systems should be fast,secure and easy to use.
 * Communication protocol used is ESP-NOW as
   * It ovecomes the drawbacks of traditonal wifi connection.
-  * the pairing between devices is needed prior to their communication. After the pairing is done, the connection is secure and peer-to-peer.
-  * ESP NOW does not require a router for the connection,Thus this project can be used anywhere.
+  * The pairing between devices is needed prior to their communication. After the pairing is done, the connection is secure and peer-to-peer.
+  * ESP NOW does not require a router for the connection,Thus this project can be used anywhere,at any remote palces.
   * If suddenly one of the boards loses power or resets, when it restarts, it will automatically connect to its peers.
 
 To read more about the project refer this [documentation](https://link/to/report/)
