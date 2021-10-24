@@ -98,8 +98,15 @@ idf.py build
 idf.py -p (PORT) flash monitor
 
 ```
+<!-- CODE  -->
+## Code
+* The input of chat is taken from the user through console.
+* The chat data is sent to espnow and console task suspended,chat data is sent to other esp32 board.
+* Console task is resumed to take the next chat.
+* When the chat data is recived by the other esp32 board it is printed to the console.
 
 
+![**flowchart**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/menuconfig.png)
 <!-- RESULTS AND DEMO -->
 ## Results and Demo
  
