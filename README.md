@@ -33,7 +33,7 @@ The aim of the project is to build a chat system using two esp32 development boa
   * ESP NOW does not require a router for the connection,Thus this project can be used anywhere,at any remote places.
   * If suddenly one of the boards loses power or resets, when it restarts, it will automatically connect to its peers.
 
-To read more about the project refer this [documentation](https://link/to/report/)
+To read more about the project refer this [documentation](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/docs/report.pdf)
 
 ### Tech Stack
 
