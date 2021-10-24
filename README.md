@@ -106,7 +106,7 @@ idf.py -p (PORT) flash monitor
 * When the chat data is recived by the other esp32 board it is printed to the console.
 
 
-![**flowchart**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/menuconfig.png)
+![**flowchart**](https://github.com/RISHI27-dot/ESP32-chat-communication-over-wifi/blob/testing1/assets/code_flow.png)
 <!-- RESULTS AND DEMO -->
 ## Results and Demo
  
