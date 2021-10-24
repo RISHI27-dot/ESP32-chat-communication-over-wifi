@@ -126,6 +126,7 @@ static void initialize_console(void)
 }
 void task_console()
 {
+    console_to_espnow_send = xQueueCreate(10, 250 * sizeof(char));
     while (1)
     {
         /* Get a line using linenoise.
@@ -138,7 +139,6 @@ void task_console()
             ESP_LOGW(TAG, "Enter a message!!");
             line = linenoise(prompt);
         }
-        console_to_espnow_send = xQueueCreate(10, 250 * sizeof(char));
         /* Add the command to the history if not empty*/
         if (strlen(line) > 0)
         {
