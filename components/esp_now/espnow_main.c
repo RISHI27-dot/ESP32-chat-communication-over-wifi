@@ -77,7 +77,7 @@ void espnowinit(void)
     ESP_LOGI(TAG, "My mac %s", mac_to_str(my_mac_str, my_mac));
     bool is_current_esp1 = memcmp(my_mac, esp_1, 6) == 0;
     uint8_t *peer_mac = is_current_esp1 ? esp_2 : esp_1;
-
+    //initialize wifi in default configuration
     nvs_flash_init();
     tcpip_adapter_init();
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -86,14 +86,14 @@ void espnowinit(void)
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_start());
-
+    //initialize espnow 
     ESP_ERROR_CHECK(esp_now_init());
+    //register send and recive callback function
     ESP_ERROR_CHECK(esp_now_register_send_cb(on_sent));
     ESP_ERROR_CHECK(esp_now_register_recv_cb(on_receive));
-
+    //setup the peer list 
     esp_now_peer_info_t peer;
     memset(&peer, 0, sizeof(esp_now_peer_info_t));
     memcpy(peer.peer_addr, peer_mac, 6);
-
     esp_now_add_peer(&peer);
 }
