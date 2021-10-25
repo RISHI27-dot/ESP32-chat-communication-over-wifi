@@ -49,7 +49,7 @@ static void initialize_filesystem(void)
         return;
     }
 }
-#endif // CONFIG_STORE_HISTORY
+#endif
 
 static void initialize_nvs(void)
 {
@@ -133,8 +133,9 @@ void task_console()
          * The line is returned when ENTER is pressed.
          *if the user enters a null message the prompt again for message
          */
-
+        /*take user input typed at the prompt*/
         char *line = linenoise(prompt);
+        /*prompt again if the string is empty*/
         while (line == NULL) { /* Break on EOF or error */
             ESP_LOGW(TAG, "Enter a message!!");
             line = linenoise(prompt);
@@ -176,6 +177,7 @@ void app_main(void)
     printf("\nChat Communication\n");//start of the chat communication
 
     /* Figure out if the terminal supports escape sequences */
+    /*this part is to take the input of strings in proper format*/
     int probe_status = linenoiseProbe();
     if (probe_status)
     { /* zero indicates success */
@@ -187,5 +189,6 @@ void app_main(void)
         prompt = PROMPT_STR "> ";
 #endif
     }
+    /*creation of the console task*/
     xTaskCreate(task_console, "task_console", 3000, NULL, 3, &console);
 }
